@@ -1,0 +1,123 @@
+%
+%  THESISBOOK
+%
+%  This file takes care of the (layout) definitions and groups the 
+%  separate latex files to one coherent part
+%
+%  @author Nick Veenhof
+%
+
+\documentclass[11pt,a4paper,oneside,notitlepage]{book}
+
+% Adjust margins
+% Should be before using the package of fancyhdr
+\setlength{\hoffset}{-1in}
+\setlength{\voffset}{-1in}
+\setlength{\topmargin}{2cm}
+\setlength{\headheight}{0.5cm}
+\setlength{\headsep}{1cm}
+\setlength{\oddsidemargin}{3.5cm}
+\setlength{\evensidemargin}{3.5cm}
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{23.3cm}
+\setlength{\footskip}{1.5cm}
+
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\pagestyle{fancy}
+
+\renewcommand{\chaptermark}[1]{\markright{\MakeUppercase{#1}}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection~#1}}
+
+\newcommand{\headerfmt}[1]{\textsl{\textsf{#1}}}
+\newcommand{\headerfmtpage}[1]{\textsf{#1}}
+
+\fancyhf{}
+\fancyhead[LE,RO]{\headerfmtpage{\thepage}}
+\fancyhead[LO]{\headerfmt{\rightmark}}
+\fancyhead[RE]{\headerfmt{\leftmark}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{ % First page of a chapter
+  \fancyhf{}
+  \fancyhead[LE,RO]{\headerfmtpage{\thepage}}
+  \fancyhead[LO]{\headerfmt{\rightmark}}
+  \fancyhead[RE]{\headerfmt{\leftmark}}
+  \renewcommand{\headrulewidth}{0.5pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% 1.5 baseline (changing this will affect front page)
+\renewcommand{\baselinestretch}{1.5}
+
+\begin{document}
+
+% frontpage
+\include{frontpage}
+
+% empty page (!!)
+\newpage
+
+% No page numbering for the front page
+\pagestyle{empty}
+
+% preface with word of gratitude and license (Do not forget to sign!!)
+\include{preface}
+
+% overzicht
+\include{overview}
+
+\pagestyle{fancy}
+\frontmatter
+
+% Table of contents
+\tableofcontents
+
+% opmaak voor het eigenlijke boek; onderstaande lijnen
+% weglaten als de eerste regel van een nieuwe alinea moet
+% inspringen in plaats van extra tussenruimte
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{0.5\baselineskip plus 0.5ex minus 0.2ex}
+%\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+% Chapters
+\mainmatter
+
+% Include chapters here (\includes)
+\include{chapter_introduction}
+\include{chapter_objectives}
+\include{chapter_description}
+\include{chapter_analysis}
+\include{chapter_requirements}
+\include{chapter_implementation}
+\include{chapter_related_work}
+\include{chapter_conclusions}
+\include{chapter_acknowledgements}
+
+% Include appendix
+\appendix
+
+% Include all appendixes such as references (\includes)
+\include{references}
+
+\backmatter
+
+% Optionally a list of figures and/or tables
+\listoffigures
+\listoftables
+
+% lege pagina (!!)
+\newpage
+
+% kaft
+
+\end{document}
