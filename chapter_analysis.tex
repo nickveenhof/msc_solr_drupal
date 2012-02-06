@@ -1,7 +1,64 @@
 \chapter{Analysis}
+This chapter describes the process of analyzing what existed in the apachesolr module when I started and points out some of the improvements that should be made. It also takes a deeper look in the Facet Api \footnote{\url{http://www.drupal.org/project/facetapi}}module to see how it is structured. 
+Apache Solr was benchmarked with different configurations to find out the most optimal ones. 
+
 \section{Apache Solr}
-\section{Apache Solr 1.4}
-\section{Apache Solr 3.x}
+\paragraph{Version conflicts}
+Apache Solr exists out of a couple parts. The analysis part tries to explain you all it entails. When Drupal 6 came out and became popular, there was only one version of Apache Solr available. This was version 1.4 and was not yet merged with the Lucene branch. Solr's version number was synced with Lucene following the Lucene/Solr merge, so Solr 3.1 contains Lucene 3.1. Solr 3.1 is the first release after Solr 1.4.1.
+
+\paragraph{Fields}
+There are different field types defined in the original schema.xml that used to come with the module. A field type has four types of information.
+\begin{itemize}
+  \item The name of the field type
+  \item An implementation class name
+  \item If the field type is TextField, a description of the field analysis for the field type
+  \item Field attributes
+\end{itemize}
+To illustrate there is listing \ref{lst:fieldtypedefinition} as an example of a field type definition as it is used in the schema provided with the Apache Solr Module.
+
+\begin{listing}[H]\begin{minted}[fontsize=\scriptsize,linenos]{java}
+<!--   A text field that uses WordDelimiterFilter to enable splitting and matching of words
+       on case-change, alpha numeric boundaries, and non-alphanumeric chars,
+       so that a query of "wifi" or "wi fi" could match a document containing "Wi-Fi".
+       Synonyms and stopwords are customized by external files, and stemming is enabled.
+       Duplicate tokens at the same position (which may result from Stemmed Synonyms or
+       WordDelim parts) are removed. -->
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <!-- in this example, we will only use synonyms at query time
+        <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
+        -->
+        <!-- Case insensitive stop word removal.
+          add enablePositionIncrements=true in both the index and query
+          analyzers to leave a 'gap' for more accurate phrase queries. -->
+        <filter class="solr.StopFilterFactory"
+                ignoreCase="true"
+                words="stopwords.txt"
+                enablePositionIncrements="true"
+                />
+        <filter class="solr.WordDelimiterFilterFactory"
+                protected="protwords.txt"
+                generateWordParts="1"
+                generateNumberParts="1"
+                catenateWords="1"
+                catenateNumbers="1"
+                catenateAll="0"
+                splitOnCaseChange="1"
+                preserveOriginal="1"/>
+        <filter class="solr.LengthFilterFactory" min="2" max="100" />
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <!-- More of the same -->
+      </analyzer>
+    </fieldType>
+\end{minted}\caption{Example of a field type definition}\label{lst:fieldtypedefinition}\end{listing}
+
+
 \section{Apachesolr module for Drupal 6 version 6.x-2.x}
 \section{Apachesolr module for Drupal 7 version 7.x-1.x-beta5}
 \section{Facetapi module for Drupal 7 version 7.x-1.x}

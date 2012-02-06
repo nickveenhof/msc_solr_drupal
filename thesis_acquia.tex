@@ -30,7 +30,8 @@
 \usepackage{minted}
 \usepackage{float}
 \usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage[nonumberlist]{glossaries}
+\makeglossaries
 
 \pagestyle{fancy}
 
@@ -102,6 +103,9 @@
 \include{chapter_related_work}
 \include{chapter_conclusions}
 \include{chapter_acknowledgements}
+
+% Include Glossary
+\printglossaries
 
 % Include appendix
 \appendix
