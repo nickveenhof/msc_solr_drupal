@@ -1,0 +1,56 @@
+% Define the glossary words
+\newglossaryentry{document}{name=document,
+description={A document is a sequence of fields}, plural=documents}
+\newglossaryentry{field}{name=field,
+description={A field is a named sequence of terms}, plural=fields}
+\newglossaryentry{term}{name=term,
+description={A term is a string}}
+
+
+\chapter{Introduction}
+
+\section{Web and Search}
+
+\paragraph{}
+It wouldn't be wrong to start with a quote from the famous paper of Sergey Brin and Lawrence Page. "The web creates new challenges for information retrieval. The amount of information on the web is growing rapidly, as well as the number of new users inexperienced in the art of web research. People are likely to surf the web using its link graph" \cite{google_paper}
+In my personal opinion I also experienced that people "Google" more and more and this phenomenon intrigued me and many others. The web won't stop growing and content is added in amounts that we can't imagine. Even though Google does its very best to index every piece of content it still lacks in a more customizable way to find data. You, as a reader, will probably already have searched in depth in a search engine other than Google. For example, ebay.com has a very specific search engine that allows their customers to find products and goods that are are exactly what to user is searching for by narrowing down the results using Facets \footnote{A faceted classification system allows the assignment of an object to multiple characteristics (attributes), enabling the classification to be ordered in multiple ways, rather than in a single, predetermined, taxonomic order. For example, a collection of books might be classified using an author facet, a subject facet, a date facet, etc.}
+
+Another missing piece in the search part of the global web is the ability to search in restricted content. Say, for example, an intranet can't benefit from a global search, hence a search engine that indexes content in a customized way is necessary. 
+
+A numerous amount of projects \footnote{\url{http://en.wikipedia.org/wiki/List_of_enterprise_search_vendors} has a list with most of the current enterprise search solutions}allow you to customize the indexing process while still supporting hundreds of thousands \glspl{document} which contains \glspl{field} with customized data. Creating an application that includes integration with access permissions is not easy but it is do-able.
+
+\section{Open Source \& Community}
+\paragraph{}
+This work is the result of many hours hard work and not only from myself, as the author but also from a complete community. These communities have changed the way how we look at software. In programming classes in university a student is taught a different way of designing software, the control of this process is fully his. There are numerous courses going from basic Java to Advanced Web Technologies to IBM rational rose project management in the FIB department of the UPC. While you can learn a ton from these courses it is never enough and by being an active member of a community the obligation you have to follow and participate in life-long learning is fulfilled. Every day there might be an aha-erlebnis \footnote{An insight that manifests itself suddenly, such as understanding how to solve a difficult problem, is sometimes called by the German word Aha-Erlebnis. It is also known as an epiphany.} or frustrations but in the end it is worthwhile for the personal evolution. 
+
+Also, since this topic is about Search Applications and Web Applications we only focus on Open Source tools that help us in achieving our goals. See section \ref{chap:description} on page \pageref{chap:description} to find out more about the specifics of these tools and why these tools were chosen. 
+
+\paragraph{}
+Working in a community is, similarly, another way of creating solutions for a set of existing problems but involves a different way of making decisions and looking at software. It is great if the code that is written can be shared and is being used by thousands of people and can be corrected by those same group of people. While code will never be perfect, different people have used the same codebase to solve existing problems and they have been saving time and resources. The company where this thesis was executed, Acquia \footnote{\url{http://www.acquia.com}}, is doing an fantastic job in supporting these very necessary skills and promoting shared knowledge.
+
+As Dries Buytaert, the man who initially built Drupal and founded Acquia, once said : 
+\begin{quote}First, Open Source adoption in the enterprise is trending at an incredible rate -- Drupal adoption has grown a lot in 2009 but we saw by far the biggest relative growth in the enterprise. Fueling this movement is the notion that Open Source options present an innovative, economically friendly and more secure alternative to their costly proprietary counterparts. Second, Cloud Computing is a transformational movement in that it enables continual innovation and updating - not to mention a highly expandable infrastructure that will reduce the burden on your IT team.
+
+It is no surprise that Acquia's strategy is closely aligned with those two trends: Drupal Gardens, Acquia Hosting and Acquia Search are all built on Open Source tools and delivered as Software as a Service in the cloud. Combining Open Source tools and Cloud Computing makes for the perfect storm for success. It provides real value to end-users and it enables companies to monetize Open Source. It creates a win-win situation. \footnote{\url{http://buytaert.net/open-source-in-the-enterprise-and-in-the-cloud}} \end{quote}
+
+This quote mentions Acquia Search, the service that combines Apache Solr (The chosen search engine in this work) and Drupal to provide a superior search solution as a service especially focussed on integrating Drupal with Apache Solr in the Cloud. Everything that is done to improve this has also been open sourced, including this work.
+
+Drupal and all contributed files hosted on Drupal.org are licensed under the GNU General Public License, version 2 or later. That means you are free to download, reuse, modify, and distribute any files hosted in Drupal.org's Git repositories under the terms of either the GPL version 2 or version 3, and to run Drupal in combination with any code with any license that is compatible with either versions 2 or 3, such as the Affero General Public License (AGPL) version 3. \cite{drupal_license}
+
+Apache Solr is licensed under the Apache License 2.0. Like any free software license, the Apache License allows the user of the software the freedom to use the software for any purpose, to distribute it, to modify it, and to distribute modified versions of the software, under the terms of the license. The Apache License, like most other permissive licenses, does not require modified versions of the software to be distributed using the same license (in contrast to copyleft licenses such as the Drupal license). In every licensed file, any original copyright, patent, trademark, and attribution notices in redistributed code must be preserved (excluding notices that do not pertain to any part of the derivative works); and, in every licensed file changed, a notification must be added stating that changes have been made to that file. \cite{apache_license}
+
+\section{Personal History}
+\paragraph{}
+My story with Drupal starts in the beginning of 2007. I've done my Bachelor degree at the Katholic University of Ghent\footnote{\url{http://www.kaho.be}}. During the second year of my Bachelor I was asked, together with a 2 other people, to make a community site in Drupal to see what is was capable of. This was created in Drupal 5 and while it wasn't as powerful as it is now we were already able to integrate LDAP into the website and customize it to our needs. I do have to admit that we, as a group, made numerous mistakes against the ethics of customizing Drupal back in the days. \footnote{Insert drupal code standards here} 
+
+\paragraph{}
+This Drupal 5 project ended, my bachelor ended and I started looking for a job and ended up with a small company called Krimson \footnote{\url{http://www.krimson.be}}. This company taught me the correct way of programming Drupal and Immediately they said : "You can start with Drupal 6, very new and way better compared with the previous version". And so I did, I started creating websites full of interactivity and community, backends that connect directly to databases running on a mainframe and even planted the initial bean of interest in search (Solr) that later would appear to grow out as this thesis topic. That website is still active on the address of \url{http://www.kortingsreus.nl}. It is also there that I created my first Drupal module, namely apachesolr\_ubercart \footnote{\url{http://drupal.org/project/apachesolr_ubercart}}
+\paragraph{}
+Afterwards I moved to Spain to study at the UPC \footnote{\url{http://www.upc.edu/}} and started to work half time at Ateneatech \footnote{\url{http://ateneatech.com/}} and later for AT-Sistemas as one of the reference engineers for a huge Solr and Drupal powered website. \footnote{\url{http://www.elsevier.es}}. Louis Toubes, one of the lead engineers, was able to give a small reference : "Nick tiene una capacidad innata de aprender por sí solo nuevas tecnologias y lo más importante es que el disfruta con ello. Sin duda, Nick es una de esas personas que desde el primer momento que la conoces sabes que aprenderás mucho de él."
+
+\paragraph{}
+During my studies at UPC I kept following the Drupal development and made numerous discussions with people and teachers on how software engineering should look at these projects. In the course of Advanced Web Technologies I even presented Drupal in classes : "Drupal as a framework" \footnote{\url{http://prezi.com/10_1ssdjroao/}}
+\paragraph{}
+There was only 1 logical step possible as my next step and that was doing an internship/thesis with Acquia. During my Erasmus period in Portugal I attended a Drupal Camp and I was also a presenter at the conference {\footnote{\url{http://lisboa2011.drupal-pt.org/sessoes/apachesolr-the-complete-search-solution}} and I've met Robert Douglas, one of the creators of the Apache Solr Integration Project for Drupal and approached him with the question if I would be able to do my internship with Acquia. After a long process with the UPC and with Acquia everything was set and the pieces of the puzzle fell in place.
+\paragraph{}
+Now,  being 2012 and a couple of years later I still don't fully know what Drupal and all its derivatives are capable of since it keeps evolving and growing. And that's good because it keeps me as a person growing and it keeps me up to date with most of the latest web technologies. This work is a piece in the puzzle I tried to make during my short time involved with these concepts. 

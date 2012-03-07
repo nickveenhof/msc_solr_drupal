@@ -25,14 +25,17 @@
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{hyperref}
-\usepackage{caption}
+\usepackage[font=small,format=plain,labelfont=bf,up,textfont=normal,up,justification=justified,singlelinecheck=false]{caption}
+
 \usepackage{listings}
 \usepackage{color}
 \usepackage{minted}
 \usepackage{float}
 \usepackage[utf8]{inputenc}
 \usepackage[nonumberlist]{glossaries}
-\makeglossaries
+\usepackage{seqsplit}
+
+% \makeglossaries
 
 \pagestyle{fancy}
 
@@ -63,8 +66,10 @@
 
 \begin{document}
 
+% \inputminted[fontsize=\scriptsize,linenos]{xml}{code_examples/schema_fieldtype.xml}
+
 % frontpage
-\include{frontpage}
+\include{00_frontpage}
 
 % empty page (!!)
 \newpage
@@ -73,10 +78,10 @@
 \pagestyle{empty}
 
 % preface with word of gratitude and license (Do not forget to sign!!)
-\include{preface}
+\include{00_preface}
 
 % overzicht
-\include{overview}
+\include{00_overview}
 
 \pagestyle{fancy}
 \frontmatter
@@ -95,15 +100,15 @@
 \mainmatter
 
 % Include chapters here (\includes)
-\include{chapter_introduction}
-\include{chapter_objectives}
-\include{chapter_description}
-\include{chapter_analysis}
-\include{chapter_requirements}
-\include{chapter_implementation}
-\include{chapter_related_work}
-\include{chapter_conclusions}
-\include{chapter_acknowledgements}
+\include{01_introduction}
+\include{02_objectives}
+\include{03_technical_background}
+\include{04_exploration}
+\include{05_implementation}
+\include{06_testing}
+\include{07_related_work}
+\include{08_conclusions}
+\include{09_acknowledgements}
 
 % Include Glossary
 \printglossaries
@@ -112,7 +117,7 @@
 \appendix
 
 % Include all appendixes such as references (\includes)
-\include{references}
+\include{00_references}
 
 \backmatter
 
