@@ -1,0 +1,10 @@
+# a couple of test stopwords to test that the words are really being
+# configured from this file:
+hola
+si
+
+# Standard english stop words taken from Lucene's StopAnalyzer
+a
+an
+and
+...

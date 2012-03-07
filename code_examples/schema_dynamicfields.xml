@@ -1,0 +1,29 @@
+ <fields>
+   <!-- We use long for integer since 64 bit ints are now common in PHP. -->
+   <dynamicField name="is_*"  type="long"    indexed="true"  stored="true" multiValued="false"/>
+   <dynamicField name="im_*"  type="long"    indexed="true"  stored="true" multiValued="true"/>
+   <!-- List of floats can be saved in a regular float field -->
+   <dynamicField name="fs_*"  type="float"   indexed="true"  stored="true" multiValued="false"/>
+   <dynamicField name="fm_*"  type="float"   indexed="true"  stored="true" multiValued="true"/>
+   <!-- List of doubles can be saved in a regular double field -->
+   <dynamicField name="ps_*"  type="double"   indexed="true"  stored="true" multiValued="false"/>
+   <dynamicField name="pm_*"  type="double"   indexed="true"  stored="true" multiValued="true"/>
+   <!-- List of booleans can be saved in a regular boolean field -->
+   <dynamicField name="bm_*"  type="boolean" indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="bs_*"  type="boolean" indexed="true"  stored="true" multiValued="false"/>
+   <!-- Regular text (without processing) can be stored in a string field-->
+   <dynamicField name="ss_*"  type="string"  indexed="true"  stored="true" multiValued="false"/>
+   <dynamicField name="sm_*"  type="string"  indexed="true"  stored="true" multiValued="true"/>
+   <!-- Normal text fields are for full text - the relevance of a match depends on the length of the text -->
+   <dynamicField name="ts_*"  type="text"    indexed="true"  stored="true" multiValued="false" termVectors="true"/>
+   <dynamicField name="tm_*"  type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
+
+...
+
+   <!-- The following causes solr to ignore any fields that don't already match an existing
+        field name or dynamic field, rather than reporting them as an error.
+        Alternately, change the type="ignored" to some other type e.g. "text" if you want
+        unknown fields indexed and/or stored by default -->
+   <dynamicField name="*" type="ignored" multiValued="true" />
+
+ </fields>

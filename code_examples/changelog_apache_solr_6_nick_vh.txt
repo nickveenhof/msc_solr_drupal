@@ -1,0 +1,41 @@
+Apache Solr integration 6.x-3.x, xxxx-xx-xx
+------------------------------
+#1469484 by Nick_vh, Josh Waihi: Fixed Limit select queries when checking index node table to prevent memory overload.
+#1456368 by Nick_vh, pwolanin: Fixed Entities not removed when excluded, unnecessary re-indexing.
+#1442358 by johnennew, Nick_vh: Fixed Nodes not queued to be removed from index when unpublished.
+#995526 by pwolanin, chx, Nick_vh | VladGh: Fixed Key length greater than 1000 bytes causes install error on MyISAM.
+#1419290 by Nick_vh, paulmckibben: Fixed When $conditions is empty, search_data() results in 'The Apache Solr search engine is not available" (but results are returned).
+#1411066 by Nick_vh | heacu: Fixed Unchecking 'Custom filter" has no effect if custom filter has been entered on Edit Search Page.
+#1424578 by Nick_vh | cpliakas: Fixed Errors thrown on admin/reports/apachesolr when the server is unavailable.
+#1446694 by edb, Nick_vh: Fixed env_id() length is only 32 characters on apachesolr_search_page() table.
+#1399584 by halcyonCorsair | Nick_vh: Added As a developer I want to change environment variables with drush.
+#1403810 by Nick_vh | SangersDrupalDude: Fixed some warning in admin area.
+#1429230 by Nick_vh: Fixed Default values for for mapping per-field is not added correctly.
+#1357588 by becw, Bußmeyer, pwolanin, Nick_vh: Added follow-up for import (needs to be optionally available when ctools is enabled).
+#1411354 by Nick_vh | SangersDrupalDude: Fixed Incorrect reporting of documents indexed.
+#1409076 by Nick_vh, sdrycroft: Fixed Entities that use the 'apachesolr_index_entities()" table are not indexed.
+#1409146 by Nick_vh: Fixed Add all possible index_types() to apachesolr_index_key().
+#1409470 by Nick_vh | xeconsulting: Fixed Some Errors in dev Version from 18th January.
+#1402746 by Nick_vh: Clean up apachesolr_do_query() so the page variable will be inside the query object.
+#1408856 by Nick_vh: Remove DrupalQueue from the install.php.
+#1397138 by Nick_vh: Create Simpletests to verify base functionality of the module.
+#1397526 by Nick_vh, cpliakas: Add an option to select which search page facets link to when displayed on non-search pages.
+#713142 by ygerasimov, pwolanin, Nick_vh: Added configuration option to a search environment if we want to use Dismax or EDismax.
+#1379128 by Nick_vh, bdragon: Fixed Treat cardinality=1 fields as single-value + caching stats response - Follow up.
+#370855 by Damien Tournoud, Nick_vh: Add configuration option to a search page if we allow user input using the url or not.
+#1392940 by Nick_vh | pwolanin: Create a 3.x solrconfig.xml that sets luceneMatchVersion.
+#1031250 by EugenMayer, Nick_vh: Added an option to index as another user instead of only anonymous.
+#1388498 by Nick_vh | pwolanin: Remove s (sortable) fields from schema.xml.
+#1379128 by Nick_vh, bdragon: Fixed Treat cardinality=1 fields as single-value + caching stats response.
+#1361422 by Nick_vh: Fixed coder issues as mentioned by the drupal testing bot.
+#1396606 by cpliakas, Nick_vh: Fixed Fatal error 'Call to undefined function apachesolr_index_status()" when visiting admin/config/search/settings.
+#1392742 by Nick_vh, pwolanin: Fixed Add solr.LengthFilterFactory to the text fields.
+#592522 by Nick_vh, pwolanin | quaoar: Fixed Hooks node_type(), taxonomy and user knocks out our database server.
+#1394276 by Nick_vh, pwolanin: Fixed Bad logic for last indexed timestamp.
+#1389306 by Nick_vh: Fixed Wrong helptext link if facetapi is not installed.
+#1252648 by cpliakas, Nick_vh: Added Allow for enabling facet blocks on non-search pages.
+#1161608 by scor, Nick_vh: Added Index format_username()($account).
+#1380448 by Nick_vh | longwave: Fixed Menu item description for /admin/reports/apachesolr.
+#1387272 by cpliakas, Nick_vh: Fixed The cancel links and button submission redirects in facet configuration forms are broken.
+#1387088 by Nick_vh, swentel: Fixed apachesolr_index_mark_for_reindex() not found during enable/disable and drush can't load apachesolr.index.inc.
+#1387628 by Nick_vh: Backport 7.x-1.x to 6.x-3.x.
