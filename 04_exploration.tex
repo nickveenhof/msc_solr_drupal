@@ -206,6 +206,16 @@ Example Text (index time) : football footballing
 \end{minted}
 Example : Nick Nick Nick
 
+\paragraph{Speed} Speed is an important factor. During the research phase I found an interesting article \footnote{\url{http://www.hathitrust.org/blogs/large-scale-search/slow-queries-and-common-words-part-1}} that showed a graph of the response time for their index. 
+This graph shows that 97\% of the requests were completed in less than a second. The average was found to be 673 milliseconds. Those 3\% of the queries are slower because there is a longer disk seek time. This means that some queries contains commonly occurring words such as "a", "of", "the", "and", etc... Queries with common words take longer because the data structures containing the lists of documents containing those words in the index are larger.
+This same source mentions that the common\-grams filter \footnote{\url{http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters\#solr.CommonGramsFilterFactory}} for Apache Solr could resolve these queries but further investigation is due. As a conclusion it can be said that Apache Solr is a very fast add-on to Apache Lucene for full text searching, spelling corrections, faceted search and much more.
+
+\begin{figure}[H]
+     \includegraphics[width=\textwidth]{images/response_time.png}
+     \caption{Response Time for a Solr Index with over 1 Million records (Logarithmic Scale)}
+\end{figure}
+
+
 \paragraph{Dynamic Fields in Solr used by Drupal}
 As explained, using a combination of Field types and field properties a schema can create lots of dynamic configurations for softwares that interact with Solr. In the case of Drupal the ApacheSolr Drupal module does not know in advance how the schema should look like because all Drupal sites are differently configured using different content types. The module should be able to cope with most of the use cases that site administrators come up with. If a field name is not found while submitting a new document, dynamicFields will be used if the name matches any of the patterns. Note that there are restrictions namely that the glob-like pattern in the name attribute must have a "*" only at the start of the end of the field definition. For example, name="\*\_i" will match any field ending in \_i (like myid\_i, z\_i). Longer patterns will be matched first and if equal size patterns both match, the first appearing in the schema will be used.
  
@@ -215,6 +225,7 @@ Before starting this work not all of these dynamic fields were provided to the s
 \captionof{listing}{Example of some dynamic field type definitions \label{code:fielddynamicdefinition}}
 
 \noindent In the implementation chapter it will be explained how these dynamic fields are used to create new fields in solr using Drupal.
+
 
 \section{Standard Drupal Search}
 By default Drupal already ships with a search module that leverages Mysql to its far extent in order to create a search experience that works quite well in smaller scale websites.
@@ -230,6 +241,43 @@ However, I'd like to point out that the Search module that is shipped with Drupa
 
 \section{Apachesolr Search Integration Drupal Module}
 The module found its origin around the end of 2007, at the time of Drupal 5. It's first author was Robert Douglass and lots of other people followed his lead in this initiative. Fast forward and at the moment of writing a Drupal 6 and 7 version exist. When this work started the Drupal 7 version was basically a port of the Drupal 6 version and needed lots of improvements. Acquia sponsors development of this module to ensure continuity and support.
+
+\paragraph{Filtering}
+Search facets, also known as filters allow users to refine or sort their search result set. Users can begin with a general search and narrow down the result set as they understand better what content is available on a site.
+
+\begin{wrapfigure}{l}{0.3\textwidth}
+\begin{center}
+     \includegraphics[width=0.25\textwidth]{images/Search_facet_ex_4_by-type-ex-1.png}
+     \caption{Filter by Type example. A user clicked on Discussion}\end{center}
+\end{wrapfigure}
+\paragraph{}
+When a user clicks on any term within a filter block it sends a new query to the Apache Solr server and it returns a resultset with the narrowed down results so it only includes content that matches the original query (text search) and the newly selected filter. 
+The practice of this narrow-down method is that the user can keep selecting new filters until he found what he was looking for. The facets can be configured as OR or AND. When the user clicks the minus "(-)" the filter will be removed from the current set and show the results of the search minus that specific filter.
+
+\begin{wrapfigure}{r}{0.60\textwidth}
+\begin{center}
+\includegraphics[width=0.60\textwidth]{images/enabled_search_filters_page-1.png}
+\caption{Configure the facets}
+\end{center}
+\end{wrapfigure}
+
+\paragraph{Configuration} When the site creator wants to add more facets it is possible by going to a configuration page. as shown in the picture above. The site creator selects the facets he wants and then configures them in more detail in the block settings. The block configuration page allows you to configure, for example, the number of filters the block displays, how many it displays after clicking the show more link, the title of the block and many more. Some important facets to mention are Author, Content Type, Language, Vocabulary and Dynamic CCK/Field API filters
+
+\paragraph{Content Recommendation}
+Apache Solr can also show content suggestions to user that is viewing a specific piece of content. These suggestions are made based on the content of the viewed text. It can be used for suggestions similar to "customers who bought X also liked Y", or simply a list of relevant blog entries. The importance of certain parameters can be adjusted in the bias settings.
+\begin{figure}[H]
+     \includegraphics[width=\textwidth]{images/more_like_this.png}
+     \caption{Content Recommendations can be seen in the block "Related Posts"}
+\end{figure}
+
+\begin{wrapfigure}{l}{0.5\textwidth}
+\begin{center}
+     \includegraphics[width=0.5\textwidth]{images/spellchecker.jpg}
+     \caption{Spelling correction}
+\end{center}
+\end{wrapfigure}
+\paragraph{Spelling Suggestions}
+One of the other features of Apache Solr, and a feature that conquered a lot of hearts in the community was the spellchecker. Similarly to what Google does when you misspell a word it will search in the index for a word similar to your word, but with better/more relevant results.
 
 \paragraph{State of the UI as of September 2011} What is shown below is a snapshot of how the module looked in the backend as of September 2011. There are markers that indicate problem area. Do take into account that this does not show you any comments made on the internals of the module.
 \begin{figure}[H]
@@ -253,7 +301,7 @@ The module found its origin around the end of 2007, at the time of Drupal 5. It'
 \end{figure}
 
 \paragraph{Architectural challenges}
-Drupal and the module were never intended to be built by architects but by people who solve problems, real world problems. Many people worked together to create a cohesive project that is very stable but might not be in agreement with that is taught in classes such as Object Oriented programming, other theories and best practices. A class diagram would be a faulty way to show you the beauty this module has to offer its users since there were hardly object oriented concepts applied to this module that were worthy enough to show a class diagram from. Together with Acquia we've set up a list of minimal achievements we should reach for the Apache Solr module by the end of  February. 
+Drupal and the module were never intended to be built by architects but by people who solve problems, real world problems. Many people worked together to create a cohesive project that is very stable but might not be in agreement with that is taught in classes such as Object Oriented programming, other theories and best practices. A class diagram would be a faulty way to show you the beauty this module has to offer its users since there were hardly object oriented concepts applied to this module that were worthy enough to show a class diagram from. Together with Acquia we've set up a list of minimal achievements that should be reached by the end of  February. 
 
 \paragraph{Improvements}
 \begin{itemize}
@@ -329,21 +377,54 @@ As part of the analysis a class diagram was made from the Facet Api code to get 
 \section{Acquia Search for Drupal 6 and 7}
 Quote from Dries' blog : "Acquia Search is a hosted search service based on the Software as a Service (SaaS) model. The way it works is that Drupal sites push their content to the search servers hosted by Acquia. We index the content, builds an index, and handle search queries. We provide the search results, facets, and content recommendations to your Drupal site over the network." \footnote{\url{http://buytaert.net/acquia-search-benefits-for-site-administrators}}
 
-The way it works is that the data is protected during the transport over the web by SSL and to authenticate to the search servers at Acquia an HMAC authentication layer is used. This means that the data is encrypted so no man in the middle attack can be exploited. Acquia knows that you have sent the request and will verify, using this HMA authentication, if the data that was sent was not modified. 
-
 As the reader of this paper would have guessed, Acquia Search is built using the Open Source Lucene and Solr distributions from the Apache project. Another quote from Dries' website : "Many organizations simply lack the Java expertise to deploy, manage and scale Java applications or their hosting environment may not accommodate it. Because Acquia Search is a hosted service, it takes away the burden of installation, configuration, and operational duties to keep the software fast, secure and up-to-date."
 
 \paragraph{Architecture}
 \begin{figure}[H]
-     \includegraphics[width=\textwidth]{images/acquia_solr_classes.jpg}
+     \includegraphics[width=10cm]{images/acquia_solr_classes.jpg}
      \caption{Overview of the classes and services used for Acquia Search at the website's end.}
 \end{figure}
 
+Even though the image was not build as a real class diagram it should be clear that there are 2 classes in the Apache Solr module that are pictured here (yellow). The only important one to cover here is the DrupalApacheSolrService. This class makes it possible to connect to an arbitrary Solr server. When the Acquia Search module is enabled on any website the AcquiaSearchService class extends the DrupalApacheSolrService class and adds the authentication information to all the requests.
+
+The next figure will explain the server side handling of the requests that are being sent to Solr.
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{images/acquia_architecture.jpg}
      \caption{Server Side view of Acquia Search. Certain information has been blurred for confidentiality}
 \end{figure}
 
+\paragraph{HMAC authentication filter}
+The way it works is that the data is protected during the transport over the web by SSL and to authenticate to the search servers at Acquia an SHA1-HMAC authentication layer is used. This means that the data is encrypted so no man in the middle attack can be exploited. Acquia knows that you have sent the request and will verify, using this SHA1-HMAC authentication, if the data that was sent was not modified. 
 
+This kind of authentication is commonly called a symmetric signature. Using a shared secret the message is signed and also verified as can be seen in the image below.
 
-Currently only supports Solr 1.4. There is a java servlet written to use authentication. Write down the method of this authentication here and in implementation write down the new code
+\begin{figure}[H]
+     \includegraphics[width=10cm]{images/IC42720.png}
+     \caption{Signing a message using a symmetric signature}
+\end{figure}
+
+As illustrated in the figure above, signing a message using a symmetric signature involves the following steps:
+
+\begin{itemize}
+\item The sender creates a HMAC using a shared secret key and attaches it to the message.
+\item The sender sends the message and HMAC to the recipient.
+\item The recipient verifies that the HMAC that was sent with the message by using the same shared secret key that was used to create the HMAC.
+\end{itemize}
+
+By signing with a shared secret, both data integrity and data origin authenticity are provided for the signed message content. The only downside is that the receiver does not know who exactly wrote the message. It can only verify if it was encrypted with the right shared key. Acquia Search creates a hash from the network identifier (aka the subscription ID from the customer) and generates a secret shared key from this information. Using this derived key and a blob of data it can be easily encoded so the backend is able to verify the authenticity of the message
+
+\inputminted[fontsize=\scriptsize,linenos]{php}{./code_examples/hmac_snippet.php}
+\caption{Small excerpt to show how the Client side generates the HMAC message to send back to the Solr Service}
+
+\paragraph{State of Acquia Search}
+When the internship started at Acquia there were some blanks left to be filled regarding Acquia Search. Since Solr 3.4 (now 3.5) came out it was only a logical step to convert the Acquia Search service to this newer version of Apache Solr so it could be used in the software as a service ideology that Acquia has. The version that is currently used is Apache Solr 1.4 and is still one of the defacto standards when deploying Solr.
+
+As always,  upgrading does not usually happen overnight without any effort. There are many clients running their active sites from Solr 1.4 and it is not guaranteed that all of these will work perfectly for Solr 3.5. Performance factors are also a key role during this migration. 
+
+As reviewed by the architecture it also needs a confirmed upgrade path for the HMAC authentication, which was written specifically for Solr 1.4 as a Java Servlet.
+
+\paragraph{Improvements}
+\begin{itemize}
+\item Upgrade the Java Servlet that was written to handle HMAC authentication Solr request to Solr 3.x
+\item Test if the Solr 3.x performs better or equally good using the upgraded code and by using existing indexes and a real infrastructure server setup to emulate a real-life situation.
+\end{itemize}

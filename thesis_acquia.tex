@@ -34,6 +34,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[nonumberlist]{glossaries}
 \usepackage{seqsplit}
+\usepackage{wrapfig}
 
 % \makeglossaries
 
@@ -63,6 +64,20 @@
 
 % 1.5 baseline (changing this will affect front page)
 \renewcommand{\baselinestretch}{1.5}
+
+\newenvironment{packed_itemize}{
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+\newenvironment{packed_enumerate}{
+\begin{enumerate}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{enumerate}}
 
 \begin{document}
 
@@ -105,10 +120,9 @@
 \include{03_technical_background}
 \include{04_exploration}
 \include{05_implementation}
-\include{06_testing}
-\include{07_related_work}
-\include{08_conclusions}
-\include{09_acknowledgements}
+\include{06_related_work}
+\include{07_conclusions}
+\include{08_acknowledgements}
 
 % Include Glossary
 \printglossaries
@@ -123,7 +137,6 @@
 
 % Optionally a list of figures and/or tables
 \listoffigures
-\listoftables
 
 % lege pagina (!!)
 \newpage
