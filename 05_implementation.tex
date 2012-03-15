@@ -105,7 +105,7 @@ The environments are also exportable to code so that is becomes easier for deplo
 \paragraph{UI Improvements}Also the Search Pages obtained a massive change UI wise. All the functionality is now merged in to one solid landing page for search pages. The core search page is now a part of the search pages list, whereas before it was a separate process and also separate code. Every search page has a title, a path, a designated environment where it should send its requests to and naturally an edit link, a clone link and a delete link where it is allowed. It is by default not allowed to remove the core search page since this would break the whole process. 
 This breakage is due to the dependency on the Search module within Drupal Core. More about that in the next paragraph. 
 
-\begin{wrapfigure}{l}{0.7\textwidth}
+\begin{wrapfigure}{l}{0.5\textwidth}
 \begin{center}
      \includegraphics[width=0.5\textwidth]{images/implementation/search_page_detail.png}
      \caption{Search Page Configuration : Label and Description}
@@ -314,7 +314,7 @@ This was solved by making a one-to-many relationship with query types and their 
 \caption{A before and after view of the query types key}
 \clearpage
 
-\section{Backporting Facet API And Apache Solr to Drupal 6I}
+\section{Backporting Facet API And Apache Solr to Drupal 6}
 Backporting a module from Drupal 7 to Drupal 6 sounds easy but it is not. A programmer is used to all the new tools that are offered to him/her such as the new database layer, some of the Drupal 7 API changes (no more superfunctions \footnote{Superfunctions are functions that try to do it all, in Drupal 7 most of those were replaced with separate functions, hence the big increase in amount of functions}) and most importantly the better theming layer. All progress was also tracked publicly in issue [\#1387164] \footnote{\url{http://drupal.org/node/1387164} by Nick\_vh, gnucifer | cpliakas: Backport Facet API to Drupal 6.} for Facet API and in [\#1387628] \footnote{\url{http://drupal.org/node/1387628} by Nick\_vh: Backport 7.x-1.x to 6.x-3.x.} In this small chapter it tries to explain what was learned from this procedure.
 
 \paragraph{DBTNG to MySQL}
@@ -509,10 +509,36 @@ If one wants to migrate to Solr 3.5 coming from Solr 1.4 with low risk of change
 However, the TieredMergePolicy is interesting when understood correctly. For a better understanding more investigation should be done. 
 
 The big outcome of this test is that Solr 3.5 versus 1.4 is a big performance win. Also it is good to know that the MergePolicy should be set explicitly when using LuceneMatchVersion in the solrconfig.xml. This exact conclusion and result is also publicly available on the blog of the Author at \url{http://nickveenhof.be/blog/upgrading-apache-solr-14-35-and-its-implications}.
+\clearpage
 
 \section{Additional Modules created to empower users to use the Apache Solr Module suite}
 \subsection{Facet Api Slider}
+\begin{wrapfigure}{r}{0.4\textwidth}
+\begin{center}
+     \includegraphics[width=0.4\textwidth]{images/implementation/facetapi_dataflow.png}
+     \caption{A real life use case of the Facet Api Slider, implemented by Dataflow \url{http://dataflow.be/}}
+\end{center}
+\end{wrapfigure}
+\paragraph{Use and reason}
+The Facetapi Slider \footnote{\url{http://drupal.org/project/facetapi_slider}} was created to make maximum use of the range query type. It allows site creators to easily switch the UI from a list of numeric values to a slider where one can set the minimum and the maximum and the search will be filtered within this range. 
+
+Creating it was not very easy since we had to keep the minimum and the maximum for the global set and also the values that were set by the user. Creating a usable experience proved difficult and there are still discussions \footnote{\url{http://drupal.org/project/issues/facetapi_slider}} ongoing how to improve this process. 
+
 \subsection{Apache Solr Term}
+\paragraph{}The Apache Solr Term module \footnote{\url{http://drupal.org/project/apachesolr_term}} provides basic indexing of the taxonomy terms. It makes use of the new entity indexer that was pushed in to the Apache Solr module and allows site creators to index terms, with attached fields. But moreover, users can search for terms.
+
 \subsection{Apache Solr Commerce}
+\paragraph{}The Apache Solr Term module \footnote{\url{http://drupal.org/project/apachesolr_commerce}} provides basic indexing of commerce entity types. It makes use of the new entity indexer that was pushed in to the Apache Solr module and allows site creators to index items that are for sale, including their price, with attached fields. When combined with the Facetapi Slider it makes up for a powerful experience in a webshop.
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\begin{center}
+  \vspace{-25pt}
+   \includegraphics[width=0.4\textwidth]{images/implementation/apachesolr_sort.png}
+   \caption{Apache Solr Sort UI sort selection}
+\end{center}
+\end{wrapfigure}
 \subsection{Apache Solr User}
+\paragraph{}The Apache Solr User module \footnote{\url{http://drupal.org/project/apachesolr_user}} provides basic indexing of the user entities. It makes use of the new entity indexer that was pushed in to the Apache Solr module and allows site creators to index user entities, with attached fields. But moreover, users can search for other users and for example, in their profile.
+
 \subsection{Apache Solr Sort UI}
+\paragraph{} The Apache Solr Sort UI module existed already in an earlier stage, primarily written by drupal\_sensei \footnote{\url{http://drupal.org/user/721548}} to serve the need of a configurable settings page that allows the site creator to choose which fields are available to sort on and what the weight should be when those are listed. 

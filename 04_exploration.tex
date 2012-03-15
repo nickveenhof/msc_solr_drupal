@@ -284,50 +284,72 @@ One of the other features of Apache Solr, and a feature that conquered a lot of 
      \includegraphics[width=\textwidth]{images/apachesolr_ui_backend_september_2011_1.jpg}
      \caption{UI settings backend, September 2011}
 \end{figure}
+\paragraph{Summary for the UI settings backend}
+\begin{itemize}
+\item The tab names are hard to understand. Search bias and/or Search fields are not comprehensible for a first time user.
+\item The first like is a link to add a content recommendation block. Surely there must be more important items to appear at the top. 
+\item In the settings tab there are global search page settings and ideally those must be generalized so that each search page can use another preset.
+\item The use of the "Show search box" appears everywhere and is therefor obsolete.
+\end{itemize}
 
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{images/apachesolr_ui_backend_september_2011_2.jpg}
      \caption{UI index report backend, September 2011}
 \end{figure}
+\paragraph{Summary for the UI report backend}
+\begin{itemize}
+\item There is information spread out across the whole page. This should be structured and weight should be given to the more important parts.
+\item There are 3 types of actions but reading all of them makes you doubt even more about what they do. That should be clarified
+\end{itemize}
+
 
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{images/apachesolr_ui_backend_september_2011_3.jpg}
      \caption{UI search pages backend, September 2011}
 \end{figure}
+\paragraph{Summary for the UI search pages backend}
+\begin{itemize}
+\item When going to the search pages the first time, the user sees that the list is empty. However, when going to the search in Drupal a new search tab was added. This raises confusion and therefore the core search page (overtaken by Apache Solr) should appear in the search pages listing.
+\end{itemize}
 
 \begin{figure}[H]
      \includegraphics[width=\textwidth/(2)]{images/apachesolr_ui_backend_september_2011_4.jpg}
      \caption{UI for result and index biasing backend, September 2011}
 \end{figure}
+\paragraph{Summary for the UI index biasing backend}
+\begin{itemize}
+\item Multiple forms are visible in 1 page. According to the UI standards of Drupal this is a no-go.
+\item it also appears there is a settings available, a setting that excludes content types from the index, that should be moved to the index settings. 
+\end{itemize}
 
 \paragraph{Architectural challenges}
-Drupal and the module were never intended to be built by architects but by people who solve problems, real world problems. Many people worked together to create a cohesive project that is very stable but might not be in agreement with that is taught in classes such as Object Oriented programming, other theories and best practices. A class diagram would be a faulty way to show you the beauty this module has to offer its users since there were hardly object oriented concepts applied to this module that were worthy enough to show a class diagram from. Together with Acquia we've set up a list of minimal achievements that should be reached by the end of  February. 
+Drupal and the module were never intended to be built by architects but by people who solve problems, real world problems. Many people worked together to create a cohesive project that is very stable but might not be in agreement with that is taught in classes such as Object Oriented programming, other theories and best practices. A class diagram would be a faulty way to show you the beauty this module has to offer its users since there were hardly object oriented concepts applied to this module that were worthy enough to show a class diagram from. Together with Acquia we've set up a list of minimal achievements that should be reached by the end of  February. Some of these items are also issues that were pointed out by other companies or users and they were being put into the issue queue waiting for an answer or a resolution. 
 
 \paragraph{Improvements}
-\begin{itemize}
+\begin{packed_itemize}
 \item UI refactoring to make a better experience \footnote{\url{http://drupal.org/node/1292364}}
 \item Support the indexing of multiple entities natively so the module would have an API to index users / terms / ... easily \footnote{\url{http://drupal.org/node/1292364}}
 \item Global functions should be context driven.\footnote{\url{http://drupal.org/node/1292364}}
 \item Get rid of dependencies in theme layer from core search \footnote{Related to \url{http://drupal.org/node/1314406} (de-duplication)}
-\item Hooks node\_type, taxonomy and user knocks out our database server \footnote{\url{http://drupal.org/node/592522}}
+\item (Performance) Hooks node\_type, taxonomy and user knocks out our database server \footnote{\url{http://drupal.org/node/592522}}
 \item Improve file listing and access control
 \item More like this blocks should get a delete button \footnote{\url{http://drupal.org/node/1271964}}
 \item De-duplicate core and custom search in order to obtain clarity in the code \footnote{\url{http://drupal.org/node/1314406}}
 \item Add 1 custom search block with generic render function for custom development
 \item The numeric field id should not be used for Solr index field names \footnote{\url{http://drupal.org/node/1161538}}
 \item Query type should be adjusted in order to allow different widgets in facetapi \footnote{\url{http://drupal.org/node/1161444}}
-\item Change php static to drupal\_static \footnote{\url{http://drupal.org/node/1334216}}
+\item Change the PHP static to the Drupal function drupal\_static() \footnote{\url{http://drupal.org/node/1334216}}
 \item Non-current/valid Node Types are not excluded from index \footnote{\url{http://drupal.org/node/1000532}}
-\item add retain current filters checkbox to custom search page \footnote{\url{http://drupal.org/node/1246422}}
-\item add "retain-filters" param when in facet browsing mode \footnote{\url{http://drupal.org/node/1116792}}
+\item Add retain current filters checkbox to custom search page \footnote{\url{http://drupal.org/node/1246422}}
+\item Add "retain-filters" param when in facet browsing mode \footnote{\url{http://drupal.org/node/1116792}}
 \item Handle 1 placeholder in a custom search page path with makes the taxonomy sub-module obsolete \footnote{\url{http://drupal.org/node/1294846}}
 \item Create tests for the module \footnote{\url{http://drupal.org/node/989398}}
-\item bundle' is not a required field, but apachesolr treats it as such (Evaluate required fields in schema, make non-required if possible) \footnote{\url{http://drupal.org/node/1279164}}
+\item Bundle' is not a required field, but Apachesolr treats it as such (Evaluate required fields in schema, make non-required if possible) \footnote{\url{http://drupal.org/node/1279164}}
 \item Improve Date faceting/date query type (combined with facetapi) \footnote{\url{http://drupal.org/node/1201534}}
 \item Facets are currently not linked to the appropriate search page
 \item Add clone operation for search environments \footnote{\url{http://drupal.org/node/1292328}}
 \item Backport Apache Solr Module to Drupal 6
-\end{itemize}
+\end{packed_itemize}
 
 \section{Facetapi Drupal module}
 The Facet API module allows site builders to easily create and manage faceted search interfaces. In addition to the UI components that come out of the box, themers and module developers can build their own widgets that can optionally be contributed back to Drupal.org. Facet API works with the core Search, Search API, and Apache Solr Search Integration modules (including Acquia Search) meaning that code and configuration can be reused as-is with the most popular search solutions available to Drupal. It was created by Chris Pliakas and Peter Wolanin specifically for the Drupal 7 version of any search tool. Acquia sponsors development of this module to ensure continuity and support.
@@ -339,12 +361,18 @@ Screenshots of the implemented part of facetapi (Drupal 7)
      \includegraphics[width=\textwidth]{images/facetapI_ui_september_2011.jpg}
      \caption{Apachesolr Facetapi Integration UI as of September 2011}
 \end{figure}
+\paragraph{Summary for the UI search pages backend}
+\begin{itemize}
+\item There was no possibility to easily switch to facets from other environments because one had to make the other environment the default one. This was a huge workaround and had to be fixed.
+\end{itemize}
 
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{images/facetapi_ui_facet_september_2011.jpg}
      \caption{Apachesolr Facetapi Integration UI of 1 facet as of September 2011}
 \end{figure}
-
+\begin{itemize}
+\item The Facet details page was ok in its use and therefor it did not need any further adjustments.
+\end{itemize}
 
 \paragraph{Architecture}
 As part of the analysis a class diagram was made from the Facet Api code to get a better understanding of the internals. An issue \footnote{\url{http://drupal.org/node/1321136}}was raised in the Facet Api issue queue on \url{drupal.org} for those that prefer to read up in detail.
@@ -366,13 +394,13 @@ As part of the analysis a class diagram was made from the Facet Api code to get 
 \end{itemize}
 
 \paragraph{Improvements}
-\begin{itemize}
+\begin{packed_itemize}
 \item Modify "query type" key in facet definition to accept an array \footnote{\url{http://drupal.org/node/1161434}}
 \item Make the current search block more configurable \footnote{\url{http://drupal.org/node/593658}}
 \item Complete configuration import functionality \footnote{\url{http://drupal.org/node/1147564}}
 \item widget.inc change id/class to not reflect the field\_id but a generic one for multisite (line 106) + apachesolr.module line 1860 to remove the id (integer) assumptions
 \item Backport Facet Api to Drupal 6
-\end{itemize}
+\end{packed_itemize}
 
 \section{Acquia Search for Drupal 6 and 7}
 Quote from Dries' blog : "Acquia Search is a hosted search service based on the Software as a Service (SaaS) model. The way it works is that Drupal sites push their content to the search servers hosted by Acquia. We index the content, builds an index, and handle search queries. We provide the search results, facets, and content recommendations to your Drupal site over the network." \footnote{\url{http://buytaert.net/acquia-search-benefits-for-site-administrators}}
