@@ -1,26 +1,25 @@
 \chapter{Exploration}
-This chapter describes the process of the index concepts in Apache Solr, explains how the apache solr works when indexing  points out some of the improvements that should be made. It also takes a deeper look in the Facet Api \footnote{\url{http://www.drupal.org/project/facetapi}}module to see how it is structured and where it could use improvements. 
-Finally Apache Solr was benchmarked with different configurations to find out the most optimal ones.
+This chapter describes the process of the index concepts in Apache Solr, explains how the Apache Solr Search Integration module for Drupal works when indexing and points out some of the improvements that should be made. It also takes a deeper look in the Facet Api \footnote{\url{http://www.drupal.org/project/facetapi}}module to see how it is structured and where it could use improvements. And finally a brief analysis for the upgrade from Apache Solr 1.4 to Apache Solr 3.5 in the context of Acquia Search service.
 
 \section{Apache Solr}
 \paragraph{Version conflicts}
-Apache Solr exists out of a couple parts. The analysis part tries to explain you all it entails. When Drupal 6 came out and became popular, there was only one version of Apache Solr available. This was version 1.4 and was not yet merged with the Lucene branch. Solr's version number was synced with Lucene following the Lucene/Solr merge, so Solr 3.1 contains Lucene 3.1. Solr 3.1 is the first release after Solr 1.4.1. All the explanation that follows will be for Solr 3.x since this is the version that is used and was aimed at during the creation of this project.
+Apache Solr consists out of a number of parts. The analysis part tries to explain you all it entails. When Drupal 6 came out and became popular, there was only one version of Apache Solr available. This was version 1.4 and was not yet merged with the Lucene branch. Solr's version number was synced with Lucene following the Lucene/Solr merge, so Solr 3.1 contains Lucene 3.1. Solr 3.1 is the first release after Solr 1.4.1. All the explanation that follows will be for Solr 3.x since this is the version that is used and was aimed at during the creation of this project.
 
 \paragraph{Fields}
-There are different field types defined in the original schema.xml that used to come with the module. A field type has four types of information.
+There are different field types defined in the original schema.xml that used to come with the module. A field type has four types of information. Most of this information is gathered from \cite{solr3} and \cite{solr14}.
 \begin{itemize}
   \item The name of the field type
   \item An implementation class name
   \item If the field type is TextField, a description of the field analysis for the field type
   \item Field attributes
 \end{itemize}
-To illustrate this there is listing \ref{code:fieldtypedefinition} as an example of a field type definition as it is used in the schema provided with the Apache Solr Module and also a list of all possible field types in listing \ref{lst:fieldtypedefinition}
+To illustrate this there is listing \ref{code:fieldtypedefinition} as an example of a field type definition as it is used in the schema provided with the Apache Solr Module and also a list of all possible field types in listing \ref{lst:fieldtypedefinition}.
 
 \begin{longtable}{| p{4cm} | p{11cm} |}
     \hline
     Class & Description \\ \hline
     BCDIntField & Binary-coded decimal (BCD) integer. BCD is a relatively inefficient 
-    encoding that offers the benefits of quick decimal calculations and quick conversion to a string. \\ \hline
+    encoding algorithm that offers the benefits of quick decimal calculations and quick conversion to a string. \\ \hline
     BCDLongField & BCD long integer \\ \hline
     BCDStrField & BCD string \\ \hline
     *BinaryField & Binary data \\ \hline
@@ -78,7 +77,7 @@ These dynamic fields are what we call fields from the Field API (Drupal 7) or fr
 \captionof{listing}{Example of a text field type definition \label{code:fieldtypedefinition}}
 
 \paragraph{Analyzers, Filters and Tokenizers used by Apache Solr Search Integration}
-In the snippet of the text field type definition there there are some unexplained entries. Filters, tokenizers and analyzers are used to process a value submitted by the application and to be saved properly into Solr so we optimize the content for faster search. In chapter 3 these concepts were shortly explained and what follows will be a list of analyzers, tokenizers and filters used in the Drupal module. Please note that these concepts can be used during query time and also at the index time.
+In the snippet of the text field type definition there are some unexplained entries. Filters, tokenizers and analyzers are used to process a value submitted by the application and to be saved properly into Solr so we optimize the content for faster search. In chapter 3 these concepts were shortly explained and what follows will be a list of analyzers, tokenizers and filters used in the Drupal module. Please note that these concepts can be used during query time and also at the index time.
 A complete list of the supported classes can be found at \url{http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters}.
 
 \paragraph{}
@@ -113,7 +112,7 @@ Example (index time): "I.B.M.", "Solr" ==> "i.b.m.", "solr".
 \mbox{} \\
 \includegraphics[width=\textwidth]{images/lowercasefilterfactory.jpg}
 
-\paragraph{StopFilterFactory} Discards common words that are listed in the stopwords.txt file. This file is shipped in the module. Examples of these words are "an, and, are, ...". And as visible it comes with some configuration options such as ignoring the case of the text and the file from where to read the stopwords from. This should be a path starting from the conf folder.  When enablePositionIncrements is true a token is stopped (discarded) and the position of the following token is incremented. This is useful if you want to know if certain words were discarded by looking at the token position.
+\paragraph{StopFilterFactory} Discards common words that are listed in the stopwords.txt file. This file is shipped in the module. Examples of these words are "an, and, are, ...". And as seen in the example it ships with some configuration options such as ignoring the case of the text and the file from where to read the stopwords from. This should be a path starting from the conf folder.  When enablePositionIncrements is true a token is stopped (discarded) and the position of the following token is incremented. This is useful if you want to know if certain words were discarded by looking at the token position.
 \begin{minted}[fontsize=\scriptsize,linenos]{xml}
 <filter class="solr.StopFilterFactory"
     ignoreCase="true"
@@ -127,7 +126,7 @@ Example (index time): Si Hola estoy nick a on
 \mbox{} \\
 \includegraphics[width=\textwidth]{images/stopfilterfactory.jpg}
 
-\paragraph{WordDelimiterFilterFactory} Delimits words based on parts of words. Was originally defined for the use in english based texts. It follows the following strict order but allows a number of configurations to happen. The original filter has more options but below are only the ones used in the Apache Solr schema.xml
+\paragraph{WordDelimiterFilterFactory} Delimits words based on parts of words. Was originally defined for the use in English based texts. It follows the following strict order but allows a number of configurations to happen. The original filter has more options but below are only the ones used in the Apache Solr schema.xml
 \begin{itemize}
 \item{protected} (optional) The pathname of a file that contains a list of protected words that should be passed though without splitting. In the case of Drupal these are predefined as some html entities.
 \item{generateWordParts} splits words at delimiters. 
@@ -154,7 +153,7 @@ Example text (index time): Zap-Master-9000 9000-12 BugBlaster-XL hot-spot-sensor
 \mbox{} \\
 \includegraphics[width=\textwidth]{images/worddelimiterfactory.jpg}
 
-\paragraph{LengthFilterFactory} Words smaller than 2 chars and bigger than 100 will be discarded. This is useful to speed up the query process because a blog posting from large scale solr mentions that a query will be exponentially grow in query time when small  words are used (Add reference!!!)
+\paragraph{LengthFilterFactory} Words smaller than 2 chars and bigger than 100 will be discarded. This is useful to speed up the query process because a blog posting from Large Scale Search with Solr mentions that a query will exponentially grow in query time when small words are used \footnote{\url{http://www.hathitrust.org/blogs/large-scale-search}}
 \begin{minted}[fontsize=\scriptsize,linenos]{xml}
 <filter class="solr.LengthFilterFactory" min="2" max="100" />
 \end{minted}
@@ -217,20 +216,20 @@ This same source mentions that the common\-grams filter \footnote{\url{http://wi
 
 
 \paragraph{Dynamic Fields in Solr used by Drupal}
-As explained, using a combination of Field types and field properties a schema can create lots of dynamic configurations for softwares that interact with Solr. In the case of Drupal the ApacheSolr Drupal module does not know in advance how the schema should look like because all Drupal sites are differently configured using different content types. The module should be able to cope with most of the use cases that site administrators come up with. If a field name is not found while submitting a new document, dynamicFields will be used if the name matches any of the patterns. Note that there are restrictions namely that the glob-like pattern in the name attribute must have a "*" only at the start of the end of the field definition. For example, name="\*\_i" will match any field ending in \_i (like myid\_i, z\_i). Longer patterns will be matched first and if equal size patterns both match, the first appearing in the schema will be used.
+As explained, using a combination of field types and field properties a schema can create lots of dynamic configurations for softwares that interact with Solr. In the case of Drupal the Apache Solr Drupal module does not know in advance how the schema should look like because all Drupal sites are differently configured using different content types. The module should be able to cope with most of the use cases that site administrators come up with. If a field name is not found while submitting a new document, the "dynamicFields" type will be used if the name matches any of the patterns. Note that there are restrictions namely that the glob-like pattern in the name attribute must have a "*" only at the start of the end of the field definition. For example, name="\*\_i" will match any field ending in \_i (like myid\_i, z\_i). Longer patterns will be matched first and if equal size patterns both match, the first appearing in the schema will be used.
  
 Before starting this work not all of these dynamic fields were provided to the site administrators but with time a list was compiled to meet 99\% of the use cases.  See schema.xml in the project files for the complete list. A small snippet of some of these dynamic fields is included below. The 1st letter indicates the data type and the last letter is 's' for single valued, 'm' for multi-valued.
 
 \inputminted[fontsize=\scriptsize,linenos]{xml}{./code_examples/schema_dynamicfields.xml}
 \captionof{listing}{Example of some dynamic field type definitions \label{code:fielddynamicdefinition}}
 
-\noindent In the implementation chapter it will be explained how these dynamic fields are used to create new fields in solr using Drupal.
+\noindent In the implementation chapter it will be explained how these dynamic fields are used to create new fields in Solr using Drupal.
 
 
 \section{Standard Drupal Search}
 By default Drupal already ships with a search module that leverages Mysql to its far extent in order to create a search experience that works quite well in smaller scale websites.
 
-In Drupal there is a concept called "cron". These are actions that are executed per a set amount of time, for example 30 minutes. Every 30 minutes the designated search actions will index a little set of the selected content, for example 100 pages. This will run until there is no more content to index. Naturally content will change and will need to be re-indexed. This concept is fairly basic and is also the one used for the Apache Solr module. 
+In Drupal there is a concept called "cron". These are actions that are executed per set amount of time, for example 30 minutes. Every 30 minutes the designated search actions will index a little set of the selected content, for example 100 pages. This will run until there is no more content to index. Naturally content will change and will need to be re-indexed. This concept is fairly basic and is also the one used for the Apache Solr module. 
 However, I'd like to point out that the Search module that is shipped with Drupal differs greatly from the Apache Solr module. 
 
 \paragraph{Advantages} The standard Drupal search module certainly has its advantages. There is, to start with, no extra server/service necessary and it does ship with Drupal core. The basic module also has support for basic text transformations, such as recognition of singular and plural words. It transforms special characters to basic text characters (Similar to the MappingCharFilterFactory in Apache Solr) and it scores items based on their tag where they are embedded in. Examples are H1, H2 and P tags.
@@ -239,8 +238,8 @@ However, I'd like to point out that the Search module that is shipped with Drupa
 
 \paragraph{Conclusion Drupal SQL search} An SQL backend does well in serving a full text search application as long as the number of indexed items stay stable and preferably < 10000 items. \footnote{This number is an estimation, depending on the SQL database application and server configuration this can vary greatly}
 
-\section{Apachesolr Search Integration Drupal Module}
-The module found its origin around the end of 2007, at the time of Drupal 5. It's first author was Robert Douglass and lots of other people followed his lead in this initiative. Fast forward and at the moment of writing a Drupal 6 and 7 version exist. When this work started the Drupal 7 version was basically a port of the Drupal 6 version and needed lots of improvements. Acquia sponsors development of this module to ensure continuity and support.
+\section{Apache Solr Search Integration Drupal Module}
+The module found its origin around the end of 2007, at the time of Drupal 5. Its first author was Robert Douglass and lots of other people followed his lead in this initiative. Fast forward and at the moment of writing a Drupal 6 and 7 version exist. When this work started the Drupal 7 version was basically a port of the Drupal 6 version and needed lots of improvements. Acquia sponsors development of this module to ensure continuity and support.
 
 \paragraph{Filtering}
 Search facets, also known as filters allow users to refine or sort their search result set. Users can begin with a general search and narrow down the result set as they understand better what content is available on a site.
@@ -252,7 +251,7 @@ Search facets, also known as filters allow users to refine or sort their search 
 \end{wrapfigure}
 \paragraph{}
 When a user clicks on any term within a filter block it sends a new query to the Apache Solr server and it returns a resultset with the narrowed down results so it only includes content that matches the original query (text search) and the newly selected filter. 
-The practice of this narrow-down method is that the user can keep selecting new filters until he found what he was looking for. The facets can be configured as OR or AND. When the user clicks the minus "(-)" the filter will be removed from the current set and show the results of the search minus that specific filter.
+The practice of this narrow-down method is that the user can keep selecting new filters until he finds what he is looking for. The facets can be configured as OR or AND. When the user clicks the minus "(-)" the filter will be removed from the current set and show the results of the search minus that specific filter.
 
 \begin{wrapfigure}{r}{0.60\textwidth}
 \begin{center}
@@ -261,7 +260,7 @@ The practice of this narrow-down method is that the user can keep selecting new 
 \end{center}
 \end{wrapfigure}
 
-\paragraph{Configuration} When the site creator wants to add more facets it is possible by going to a configuration page. as shown in the picture above. The site creator selects the facets he wants and then configures them in more detail in the block settings. The block configuration page allows you to configure, for example, the number of filters the block displays, how many it displays after clicking the show more link, the title of the block and many more. Some important facets to mention are Author, Content Type, Language, Vocabulary and Dynamic CCK/Field API filters
+\paragraph{Configuration} When the site creator wants to add more facets it is possible by going to a configuration page. As shown in the picture above. The site creator selects the facets he wants and then configures them in more detail in the block settings. The block configuration page allows you to configure, for example, the number of filters the block displays, how many it displays after clicking the show more link, the title of the block and many more. Some important facets to mention are Author, Content Type, Language, Vocabulary and Dynamic CCK/Field API filters
 
 \paragraph{Content Recommendation}
 Apache Solr can also show content suggestions to user that is viewing a specific piece of content. These suggestions are made based on the content of the viewed text. It can be used for suggestions similar to "customers who bought X also liked Y", or simply a list of relevant blog entries. The importance of certain parameters can be adjusted in the bias settings.
@@ -279,7 +278,7 @@ Apache Solr can also show content suggestions to user that is viewing a specific
 \paragraph{Spelling Suggestions}
 One of the other features of Apache Solr, and a feature that conquered a lot of hearts in the community was the spellchecker. Similarly to what Google does when you misspell a word it will search in the index for a word similar to your word, but with better/more relevant results.
 
-\paragraph{State of the UI as of September 2011} What is shown below is a snapshot of how the module looked in the backend as of September 2011. There are markers that indicate problem area. Do take into account that this does not show you any comments made on the internals of the module.
+\paragraph{State of the UI as of September 2011} What is shown below is a snapshot of how the module looked in the backend as of September 2011. There are markers that indicate problem areas. Do take into account that this does not show you any comments made on the code and any internals of the module.
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{images/apachesolr_ui_backend_september_2011_1.jpg}
      \caption{UI settings backend, September 2011}
@@ -289,7 +288,7 @@ One of the other features of Apache Solr, and a feature that conquered a lot of 
 \item The tab names are hard to understand. Search bias and/or Search fields are not comprehensible for a first time user.
 \item The first like is a link to add a content recommendation block. Surely there must be more important items to appear at the top. 
 \item In the settings tab there are global search page settings and ideally those must be generalized so that each search page can use another preset.
-\item The use of the "Show search box" appears everywhere and is therefor obsolete.
+\item The use of the "Show search box" appears everywhere and is therefore obsolete.
 \end{itemize}
 
 \begin{figure}[H]
@@ -299,7 +298,7 @@ One of the other features of Apache Solr, and a feature that conquered a lot of 
 \paragraph{Summary for the UI report backend}
 \begin{itemize}
 \item There is information spread out across the whole page. This should be structured and weight should be given to the more important parts.
-\item There are 3 types of actions but reading all of them makes you doubt even more about what they do. That should be clarified
+\item There are 3 types of actions but reading all of them makes you doubt even more about what they do. That should be clarified.
 \end{itemize}
 
 
@@ -309,7 +308,7 @@ One of the other features of Apache Solr, and a feature that conquered a lot of 
 \end{figure}
 \paragraph{Summary for the UI search pages backend}
 \begin{itemize}
-\item When going to the search pages the first time, the user sees that the list is empty. However, when going to the search in Drupal a new search tab was added. This raises confusion and therefore the core search page (overtaken by Apache Solr) should appear in the search pages listing.
+\item When going to the search pages the first time, the user sees that the list is empty. However, when going to the search in Drupal a new search tab was added. This raises confusion and therefore the core search page (overridden by Apache Solr) should appear in the search pages listing.
 \end{itemize}
 
 \begin{figure}[H]
@@ -319,11 +318,11 @@ One of the other features of Apache Solr, and a feature that conquered a lot of 
 \paragraph{Summary for the UI index biasing backend}
 \begin{itemize}
 \item Multiple forms are visible in 1 page. According to the UI standards of Drupal this is a no-go.
-\item it also appears there is a settings available, a setting that excludes content types from the index, that should be moved to the index settings. 
+\item It also appears there is a settings available, a setting that excludes content types from the index, that should be moved to the index settings. 
 \end{itemize}
 
 \paragraph{Architectural challenges}
-Drupal and the module were never intended to be built by architects but by people who solve problems, real world problems. Many people worked together to create a cohesive project that is very stable but might not be in agreement with that is taught in classes such as Object Oriented programming, other theories and best practices. A class diagram would be a faulty way to show you the beauty this module has to offer its users since there were hardly object oriented concepts applied to this module that were worthy enough to show a class diagram from. Together with Acquia we've set up a list of minimal achievements that should be reached by the end of  February. Some of these items are also issues that were pointed out by other companies or users and they were being put into the issue queue waiting for an answer or a resolution. 
+Drupal and the module were never intended to be built by architects but by people who solve problems, real world problems. Many people worked together to create a cohesive project that is very stable but might not be in agreement with what is taught in classes such as Object Oriented programming, other theories and best practices. A class diagram would be a faulty way to show you the beauty this module has to offer its users since there were hardly object oriented concepts applied to this module that were worthy enough to generate a class-diagram from. Together with Acquia we've set up a list of minimal achievements that should be reached by the end of  February. Some of these items are also issues that were pointed out by other companies or users and they were being put into the issue queue waiting for an answer or a resolution. 
 
 \paragraph{Improvements}
 \begin{packed_itemize}
@@ -333,7 +332,7 @@ Drupal and the module were never intended to be built by architects but by peopl
 \item Get rid of dependencies in theme layer from core search \footnote{Related to \url{http://drupal.org/node/1314406} (de-duplication)}
 \item (Performance) Hooks node\_type, taxonomy and user knocks out our database server \footnote{\url{http://drupal.org/node/592522}}
 \item Improve file listing and access control
-\item More like this blocks should get a delete button \footnote{\url{http://drupal.org/node/1271964}}
+\item "More like this" blocks should get a delete button \footnote{\url{http://drupal.org/node/1271964}}
 \item De-duplicate core and custom search in order to obtain clarity in the code \footnote{\url{http://drupal.org/node/1314406}}
 \item Add 1 custom search block with generic render function for custom development
 \item The numeric field id should not be used for Solr index field names \footnote{\url{http://drupal.org/node/1161538}}
@@ -342,9 +341,9 @@ Drupal and the module were never intended to be built by architects but by peopl
 \item Non-current/valid Node Types are not excluded from index \footnote{\url{http://drupal.org/node/1000532}}
 \item Add retain current filters checkbox to custom search page \footnote{\url{http://drupal.org/node/1246422}}
 \item Add "retain-filters" param when in facet browsing mode \footnote{\url{http://drupal.org/node/1116792}}
-\item Handle 1 placeholder in a custom search page path with makes the taxonomy sub-module obsolete \footnote{\url{http://drupal.org/node/1294846}}
+\item Handle one placeholder in a custom search page path which makes the taxonomy sub-module obsolete \footnote{\url{http://drupal.org/node/1294846}}
 \item Create tests for the module \footnote{\url{http://drupal.org/node/989398}}
-\item Bundle' is not a required field, but Apachesolr treats it as such (Evaluate required fields in schema, make non-required if possible) \footnote{\url{http://drupal.org/node/1279164}}
+\item Bundle' is not a required field, but the module treats it as such (Evaluate required fields in schema, make non-required if possible) \footnote{\url{http://drupal.org/node/1279164}}
 \item Improve Date faceting/date query type (combined with facetapi) \footnote{\url{http://drupal.org/node/1201534}}
 \item Facets are currently not linked to the appropriate search page
 \item Add clone operation for search environments \footnote{\url{http://drupal.org/node/1292328}}
@@ -354,12 +353,12 @@ Drupal and the module were never intended to be built by architects but by peopl
 \section{Facetapi Drupal module}
 The Facet API module allows site builders to easily create and manage faceted search interfaces. In addition to the UI components that come out of the box, themers and module developers can build their own widgets that can optionally be contributed back to Drupal.org. Facet API works with the core Search, Search API, and Apache Solr Search Integration modules (including Acquia Search) meaning that code and configuration can be reused as-is with the most popular search solutions available to Drupal. It was created by Chris Pliakas and Peter Wolanin specifically for the Drupal 7 version of any search tool. Acquia sponsors development of this module to ensure continuity and support.
 
-\paragraph{State of the UI as of September 2011} What is shown below is a snapshot of how the module looked in the backend and frontend as of September 2011. There are markers that indicate problem area. Do take into account that this does not show you any comments made on the internals of the module.
+\paragraph{State of the UI as of September 2011} What is shown below is a snapshot of how the module looked in the backend and frontend as of September 2011. The markers indicate problem areas. Do take into account that this does not show you any comments made on the programming code and the internals of the module.
 
 Screenshots of the implemented part of facetapi (Drupal 7)
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{images/facetapI_ui_september_2011.jpg}
-     \caption{Apachesolr Facetapi Integration UI as of September 2011}
+     \caption{Apache Solr Facetapi Integration UI as of September 2011}
 \end{figure}
 \paragraph{Summary for the UI search pages backend}
 \begin{itemize}
@@ -368,14 +367,14 @@ Screenshots of the implemented part of facetapi (Drupal 7)
 
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{images/facetapi_ui_facet_september_2011.jpg}
-     \caption{Apachesolr Facetapi Integration UI of 1 facet as of September 2011}
+     \caption{Apache Solr Facetapi Integration UI of 1 facet as of September 2011}
 \end{figure}
 \begin{itemize}
-\item The Facet details page was ok in its use and therefor it did not need any further adjustments.
+\item The Facet details page was ok in its use and therefore it did not need any further adjustments.
 \end{itemize}
 
 \paragraph{Architecture}
-As part of the analysis a class diagram was made from the Facet Api code to get a better understanding of the internals. An issue \footnote{\url{http://drupal.org/node/1321136}}was raised in the Facet Api issue queue on \url{drupal.org} for those that prefer to read up in detail.
+As part of the analysis a class diagram was made from the Facet Api code to get a better understanding of the internals. An issue \footnote{\url{http://drupal.org/node/1321136}}was raised in the Facet Api issue queue on \url{drupal.org} for those who prefer to read up in detail.
 
 \begin{figure}[H]
      \includegraphics[width=\textwidth]{images/facetapi_classdiagram.png}
@@ -388,7 +387,7 @@ As part of the analysis a class diagram was made from the Facet Api code to get 
 \end{figure}
 
 \begin{itemize}
-\item There are a number of loop-references between the adapter and it's relations. This can possibly be avoided by thinking the architecture through (see the references that have 2 lines to each other)
+\item There are a number of loop-references between the adapter and its relations. This can possibly be avoided by thinking the architecture through (see the references that have two lines to each other)
 \item The variable facet in FacetapiFacet might be a bit too un-descriptive and it looks like it could be renamed to "settings" or "facet\_settings"
 \item Doxygen documentation with loads of diagrams and easy to read documentation was generated from this. In addition to the attached images it should make the facetapi module easier to understand. The documentation can be found on \url{http://facetapi.nickveenhof.be}
 \end{itemize}
@@ -413,7 +412,7 @@ As the reader of this paper would have guessed, Acquia Search is built using the
      \caption{Overview of the classes and services used for Acquia Search at the website's end.}
 \end{figure}
 
-Even though the image was not build as a real class diagram it should be clear that there are 2 classes in the Apache Solr module that are pictured here (yellow). The only important one to cover here is the DrupalApacheSolrService. This class makes it possible to connect to an arbitrary Solr server. When the Acquia Search module is enabled on any website the AcquiaSearchService class extends the DrupalApacheSolrService class and adds the authentication information to all the requests.
+Even though the image was not built as a real class diagram it should be clear that there are two classes in the Apache Solr module that are pictured here (yellow). The only important one to cover here is the DrupalApacheSolrService. This class makes it possible to connect to an arbitrary Solr server. When the Acquia Search module is enabled on any website the AcquiaSearchService class extends the DrupalApacheSolrService class and adds the authentication information to all the requests.
 
 The next figure will explain the server side handling of the requests that are being sent to Solr.
 \begin{figure}[H]
@@ -439,13 +438,13 @@ As illustrated in the figure above, signing a message using a symmetric signatur
 \item The recipient verifies that the HMAC that was sent with the message by using the same shared secret key that was used to create the HMAC.
 \end{itemize}
 
-By signing with a shared secret, both data integrity and data origin authenticity are provided for the signed message content. The only downside is that the receiver does not know who exactly wrote the message. It can only verify if it was encrypted with the right shared key. Acquia Search creates a hash from the network identifier (aka the subscription ID from the customer) and generates a secret shared key from this information. Using this derived key and a blob of data it can be easily encoded so the backend is able to verify the authenticity of the message
+By signing with a shared secret, both data integrity and data origin authenticity are provided for the signed message content. The only downside is that the receiver does not know who exactly wrote the message. He can only verify if it was encrypted with the right shared key. Acquia Search creates a hash from the network identifier (aka the subscription ID from the customer) and generates a secret shared key from this information. Using this derived key and a blob of data it can be easily encoded so the backend is able to verify the authenticity of the message
 
 \inputminted[fontsize=\scriptsize,linenos]{php}{./code_examples/hmac_snippet.php}
 \caption{Small excerpt to show how the Client side generates the HMAC message to send back to the Solr Service}
 
 \paragraph{State of Acquia Search}
-When the internship started at Acquia there were some blanks left to be filled regarding Acquia Search. Since Solr 3.4 (now 3.5) came out it was only a logical step to convert the Acquia Search service to this newer version of Apache Solr so it could be used in the software as a service ideology that Acquia has. The version that is currently used is Apache Solr 1.4 and is still one of the defacto standards when deploying Solr.
+When the internship started at Acquia there were some blanks left to be filled regarding Acquia Search. Since Solr 3.4 (now 3.5) came out it was only a logical step to convert the Acquia Search service to this newer version of Apache Solr so it could be used in the software as a service ideology that Acquia has. The version that is currently used is Apache Solr 1.4 and is still one of the de facto standards when deploying Solr.
 
 As always,  upgrading does not usually happen overnight without any effort. There are many clients running their active sites from Solr 1.4 and it is not guaranteed that all of these will work perfectly for Solr 3.5. Performance factors are also a key role during this migration. 
 
@@ -454,5 +453,5 @@ As reviewed by the architecture it also needs a confirmed upgrade path for the H
 \paragraph{Improvements}
 \begin{itemize}
 \item Upgrade the Java Servlet that was written to handle HMAC authentication Solr request to Solr 3.x
-\item Test if the Solr 3.x performs better or equally good using the upgraded code and by using existing indexes and a real infrastructure server setup to emulate a real-life situation.
+\item Test if the Solr 3.x performs better or equally well using the upgraded code and by using existing indexes and a real infrastructure server setup to emulate a real-life situation.
 \end{itemize}

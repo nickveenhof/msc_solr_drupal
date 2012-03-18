@@ -1,9 +1,61 @@
 \chapter{Related Work}
-\section{Search Appliances}
-\subsection{Elastic Cloud}
+This chapter surveys previous work towards integrating a search application with Drupal. The main differences here are the way the module has been structured and how deeply it was generalized to be used as a broad concept. Two different themes are discussed here. One of them are the search appliances that provide a backend to send data to and allow quick full-text search. The other one are Drupal search integration solutions that try to connect Drupal with one of those search appliances
+
+\section{Elastic Search}
+\paragraph{Search Appliance}
+Elastic Search \footnote{\url{http://www.elasticsearch.org/}} (abbreviation ES) is fairly new and is also built upon the Apache Lucene software. It is an Open Source, Distributed and Restful Search Engine. The main goal of ES is to scale high and allow real time search. Another difference with the Solr project is that ES works without a predefined schema. This has the consequence that whenever a new ES core is defined, the application should communicate his preferred schema options with the ES application. 
+ES hosts their code on Github, allowing people to fork and to inspect the code more easily compared to the Apache Solr Project. 
+ES is certainly an option to look at for future projects. Unfortunately the Apache Solr Search Integration Module is currently deeply linked with the Apache Solr project and ES might not be mature enough for big enterprise clients. Concerning the Real Time Search, this is a feature in Lucene 3.x that Solr currently does not use. However, As soon as Solr 4.0 will be released \footnote{\url{http://wiki.apache.org/solr/NearRealtimeSearch}} it will offer a very similar feature as ES. 
+
+\paragraph{Drupal Integration}
+ES has a Drupal project \footnote{\url{http://drupal.org/project/elasticsearch}} that is less than a year old. Created by JoeMcGuire \footnote{\url{http://drupal.org/user/416411}} as an extension for Search API. The feature set is still very limited and with a reported amount of 12 active users it does not look very promising. However, since it is open source there is always room for improvement and as soon as a company funds development I foresee a great growth. The Drupal module only supports Drupal 7 since Search API only supports Drupal 7.
+
+\paragraph{Conclusion}
+Very interesting project, very attractive and easy setup and allows a schema-less search. However, real time search is only a temporary exclusive feature since both projects are based on Lucene. Promoted to be the best in the cloud but still has a reputation to build up. Drupal integration is almost non-existing.
+
 \subsection{Sphinx}
-\subsection{Some Other}
-\section{Drupal Search Solutions}
-\subsection{Search API}
-\subsection{Drupal Lucene API}
-\subsection{Google Search Appliance}
+Sphinx is a free software search engine designed with indexing database content in mind. It currently supports MySQL, PostgreSQL, and ODBC-compliant databases as data sources natively. Other data sources can be indexed via pipe in a custom XML format. It is distributed under the terms of the GNU General Public License version two or a proprietary license. \footnote{\url{http://sphinxsearch.com/licensing.html}}
+Starting from version 0.9.9, querying is possible using SphinxQL, a subset of SQL. Starting from version 1.10-beta, both incremental (via Real-Time backend\footnote{\url{http://sphinxsearch.com/docs/current.html\#rt-indexes}}) and batch indexing is supported.
+
+\paragraph{Drupal integration}
+Sphinx has a dedicated Drupal module \footnote{\url{http://drupal.org/project/sphinx}} that is not dependent on other modules. It has versions for Drupal 5 and 6 but with 40 active users it also does not look very promising. The latest update was done about a year ago so it looks like it is not supported anymore. Sphinx search \footnote{\url{http://drupal.org/project/sphinxsearch}} is another Drupal Integration module that seems to be a bit more active at first sight, but the last code update was about 3 years ago and no stable release ever came out. 
+
+\paragraph{Conclusion}
+Sphinx seems to be unsupported for Drupal 7 at first sight. It could be that major websites do custom implementation of the Sphinx search but it certainly does not seem that way. 
+
+\section{Search API}
+\paragraph{Concept}
+The goal of Search API is to build a generic Search API that will on the one hand abstract from the data source (using the entity\_metadata module) — thus allowing all kinds of entities to be as easily indexed and searched as nodes —, and from the indexer / search engine on the other hand, making concrete implementations like Solr, Lucene, Xapian, … implement only the specific details and thereby eliminating unnecessary code duplication. \cite{searchapi} \footnote{\url{http://groups.drupal.org/node/71158}}
+It provides a framework for easily creating searches on any entity known to Drupal, using any kind of search engine. For site administrators, it is a great alternative to other search solutions, since it already incorporates facetting support and the ability to use the Views module for displaying search results, filters, etc. Also, with the Apache Solr integration, a high-performance search engine is available for this module.
+Developers, on the other hand, will be impressed by the large flexibility and numerous ways of extension the module provides. Hence, the growing number of additional contributed modules, providing additional functionality or helping users customize some aspects of the search process. \footnote{\url{http://drupal.org/project/search_api}}
+Search API tries to provide this generic solution so all search backends can plug in to the Drupal 7 search system. While this is very promising and while it functions very well for teh MySQL backend it lacks some Solr expertise when we look at the Solr backend plugin \footnote{\url{http://drupal.org/project/search_api_solr}}.
+
+\paragraph{Conclusion}
+Search API is well on its way to provide a generic approach for backends to plug in to Drupal 7 (and possibly future versions). However, this is still a work in progress but in contrary to Sphinx and Elastic Search it has build up quite an audience of contributors and it will be worth using it in the near future when Drupal 8 is around the corner. It would be good if the Search Api Solr project copies a bit more from the Apache Solr Search Integration Module because it could make the solr performance better. Definitely worth to monitor.
+
+\section{Google}
+Google offers a few services related to search in a company's website. It has the Google Search Appliance and the Google Site Search.
+
+\paragraph{Google Search Appliance} The Google Search Appliance is a rack-mounted device providing document indexing functionality that can be integrated into an intranet, document management system or web site using a Google search-like interface for end-user retrieval of results. The operating system is based on CentOS. 
+
+\paragraph{Compared to Solr} According to a case study : The Motley Fool Migrates from Google Search Appliance to Apache Lucene/Solr Open Source Search \footnote{\url{http://www.lucidimagination.com/why-lucid/case-studies/case-study-motley-fool-migrates-google-search-appliance-apache-solrlucene-open-source-search}} there were a few key differences between the two platforms. Google Search Appliance benefits from an all-in-one solution where you have a install and deploy and full support delivered with the appliance. This doesn't come for free naturally so there are license costs attached to it. Solr on the other hand also had a few key benefits compared to the Google Search Appliance. 
+
+\begin{packed_itemize}
+\item Increased search relevancy and click-through-rate (CTR) by 40\% compared to legacy search appliance
+\item 48\% reduction in web site exit rate (bounce)
+\item Big reduction in license subscription costs, and lower cost of ownership as content data grows
+\item Rapid implementation; working search platform within two weeks, full production within 90 days
+\item Enhanced user search productivity by adding features such as sorting on both date and relevance, spelling correction, and “Did you mean…”
+\end{packed_itemize}
+
+\paragraph{Drupal and Google}
+Google also has a certain amount of projects that allow your Drupal site to be integrated with one of their solutions. This list only discusses solutions that have a Drupal 7 version ready.
+\subparagraph{Google Search Appliance}
+“The Google Search Appliance module integrates a GSA device with a Drupal site. Utilizing a GSA gives you cross-domain search functionality, which can be aggregated into a single search experience on a drupal site.”
+The Google Search Appliance is most probably used in high enterprise projects, and it seems to do well with over 1500 sites actively reporting. Latest active commit to the project was at the moment of writing 19 weeks ago so it is rather active.
+\subparagraph{Google Custom Search Engine}
+“Google Custom Search Engine (CSE) is an embedded search engine that can be used to search any set of one or more sites. No Google API key is required. Read more at \url{http://www.google.com/cse/}.” \footnote{\url{http://drupal.org/project/google_cse}} 
+Google Custom Search Engine seems to have a broad audience with more than 4600 sites actively reporting that they use the service. The benefit from this Google Custom Search Engine is that it can be used without hiring or buying any service from Google. The code did not have any update in over a year and the Drupal 7 version is still in a development stage.
+
+\paragraph{Conclusion}
+Google does a good job in providing search solutions and there are enough Drupal integration solutions. However, the lack of transparency and customization make Apache Solr a challenging competitor. Adding to that sum the amount of money that should be payed up front for licensing, makes a project lead think twice about the solution he prefers.

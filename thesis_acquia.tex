@@ -35,8 +35,7 @@
 \usepackage[nonumberlist]{glossaries}
 \usepackage{seqsplit}
 \usepackage{wrapfig}
-
-% \makeglossaries
+\usepackage{caption}
 
 \pagestyle{fancy}
 
@@ -131,8 +130,15 @@
 \appendix
 
 % Include all appendixes such as references (\includes)
-\include{00_references}
+% \include{00_references}
 
+\newpage 
+
+\nocite{*}
+\bibliography{master}{}
+\bibliographystyle{plainnat}
+\paragraph{}
+Please note that not all sources are listed here. Most online sources are being referred to in footnotes.
 \backmatter
 
 % Optionally a list of figures and/or tables
