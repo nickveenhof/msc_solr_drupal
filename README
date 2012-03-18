@@ -1,17 +1,15 @@
-minted -- highlighted source code for LaTeX
+This work is intended to show the upgrade process of a module on drupal.org using community
+tools. This study was performed as part of an internship at Acquia Inc during a period of 5
+months. More specically it was focussed on creating a stable release of the Apache Solr Search
+Integration Module for Drupal 7 and eventually also backport this to Drupal 6. Firstly there was
+an analysis state and a brief introduction to how the system worked and how to co-operate with
+an existing Open Source community. From this, existing problems were identied and thrown
+in a roadmap. Community projects have a very dynamic rhythm and issues could rise up or
+get resolved because thousands of persons had access to the code base. These challenges are
+described and tips are given on how to cope with such a dynamic development process. This
+study also describes the challenges of a backport and how to resolve them. Finally, there is an
+explanation of the Acquia Search service and the process to upgrade the server park from Solr
+1.4 to Solr 3.x (initially 3.4, nally 3.5) that includes the process of writing a Java servlet for
+managing authentication over rest services using RFC2104 HMAC encryption.
 
-minted is a package that facilitates expressive syntax highlighting in LaTeX
-using the powerful Pygments library. The package also provides options to
-customize the highlighted source code output using fancyvrb.
-
-See the documentation (minted.pdf) for examples and instructions of installation
-and usage.
-
-This work may be distributed and/or modified under the conditions of the LaTeX
-Project Public License, either version 1.3 of this license or (at your option)
-any later version.
-Additionally, the project may be distributed under the terms of the new BSD
-license.
-
-For suggestions and bug reports, please go to the project's hosting site at
-http://minted.googlecode.com.
+Nick Veenhof
